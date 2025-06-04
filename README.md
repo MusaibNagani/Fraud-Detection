@@ -28,21 +28,23 @@ This project simulates fraud detection in a transactional banking environment by
 fraud-detection/
 │
 ├── Feature-Engineering/
-│   ├── generate_fraud_data.py        # Generates Customers, Transactions, Logins
-│   ├── velocity_features.py          # Computes rolling/temporal features
-│   ├── behavioral_features.py        # IP and device anomaly indicators
-│   └── dormancy_features.py          # Dormancy-based inactivity and gap features
+│   ├── generate_fraud_data.py
+│   ├── velocity_features.py
+│   ├── behavioral_features.py
+│   └── dormancy_features.py
 │
 ├── Rule-Based-Method/
-│   ├── generate_data.py              # Faker data generator for SQLite (Phase 1)
-│   ├── fraud_detection.py            # Simple rule-based fraud flagging (SQLite)
-│   └── fraud_detection.db            # SQLite DB for Phase 1 (legacy)
+│   ├── generate_data.py
+│   ├── fraud_detection.py
+│   └── fraud_detection.db
 │
-├── velocity_features.csv             # Output from velocity pipeline
-├── behavioral_features.csv           # Output from behavioral pipeline
-├── dormancy_features.csv             # Output from dormancy pipeline
-├── .venv/                            # Python virtual environment
-└── README.md                         # Full project documentation
+├── output/                           
+│   ├── velocity_features.csv
+│   ├── behavioral_features.csv
+│   └── dormancy_features.csv
+│
+├── .venv/
+└── README.md
 ```
 
 ---
