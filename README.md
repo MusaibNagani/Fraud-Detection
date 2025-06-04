@@ -31,7 +31,8 @@ fraud-detection/
 │   ├── generate_fraud_data.py
 │   ├── velocity_features.py
 │   ├── behavioral_features.py
-│   └── dormancy_features.py
+│   ├── dormancy_features.py
+|   └── join_features.py
 │
 ├── Rule-Based-Method/
 │   ├── generate_data.py
@@ -41,7 +42,8 @@ fraud-detection/
 ├── output/                           
 │   ├── velocity_features.csv
 │   ├── behavioral_features.csv
-│   └── dormancy_features.csv
+│   ├── dormancy_features.csv
+|   └── final-features.csv
 │
 ├── .venv/
 └── README.md
