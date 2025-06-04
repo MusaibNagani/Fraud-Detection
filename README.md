@@ -1,7 +1,6 @@
+# 🕵️‍♂️ Fraud Detection Platform – Transaction Intelligence Engine
 
-# 🕵️‍♂️ Fraud Detection Platform 
-
-A full-scale fraud detection simulation project using Python, synthetic transaction generation, SQL Server database architecture, and modular feature engineering pipelines. Built to mimic real-world financial fraud analysis with a clear progression from basic rules to advanced behavioral and velocity-based analytics.
+A full-scale fraud detection simulation project using Python, synthetic transaction generation, SQL Server database architecture, and modular feature engineering pipelines. Built to mimic real-world financial fraud analysis with a clear progression from basic rules to advanced behavioral, dormancy, and velocity-based analytics.
 
 ---
 
@@ -17,7 +16,7 @@ This project simulates fraud detection in a transactional banking environment by
 |------------------------|----------------------|-----------------------------------------------------------|
 | Database               | Microsoft SQL Server | Hosts structured schema (Customers, Transactions, Logins) |
 | Data Generation        | Python + Faker       | Simulates realistic synthetic transaction data            |
-| Feature Engineering    | Python + Pandas      | Extracts rule-based, velocity, and behavioral indicators  |
+| Feature Engineering    | Python + Pandas      | Extracts rule-based, velocity, behavioral, dormancy       |
 | Storage                | CSV / Excel Export   | Saves enriched features for downstream usage              |
 | Visualization (optional)| Power BI            | Dashboarding for fraud analysts                           |
 
@@ -31,14 +30,17 @@ fraud-detection/
 ├── Feature-Engineering/
 │   ├── generate_fraud_data.py        # Generates Customers, Transactions, Logins
 │   ├── velocity_features.py          # Computes rolling/temporal features
-│   └── behavioral_features.py        # (Coming Soon) IP/device/dormancy/geo signals
+│   ├── behavioral_features.py        # IP and device anomaly indicators
+│   └── dormancy_features.py          # Dormancy-based inactivity and gap features
 │
 ├── Rule-Based-Method/
-│   ├── generate_data.py                  # Faker data generator for SQLite (Phase 1)
-|   ├── fraud_detection.py                # Simple rule-based fraud flagging (SQLite)
-|   └── fraud_detection.db                # SQLite DB for Phase 1 (legacy)
-|
+│   ├── generate_data.py              # Faker data generator for SQLite (Phase 1)
+│   ├── fraud_detection.py            # Simple rule-based fraud flagging (SQLite)
+│   └── fraud_detection.db            # SQLite DB for Phase 1 (legacy)
+│
 ├── velocity_features.csv             # Output from velocity pipeline
+├── behavioral_features.csv           # Output from behavioral pipeline
+├── dormancy_features.csv             # Output from dormancy pipeline
 ├── .venv/                            # Python virtual environment
 └── README.md                         # Full project documentation
 ```
@@ -67,16 +69,11 @@ python fraud_detection.py
 
 ### 📌 Phase 2 — MSSQL + Feature Engineering
 
-Phase 2 simulates a production environment with:
+Simulates a production-grade data architecture with:
 
-- A full relational schema
-- Hosted locally on MSSQL Server Developer Edition
-- Multiple tables: Customers, Transactions, Login
-
-**Schema includes:**
-- `Customers`: metadata like region, account type, open date
-- `Transactions`: timestamped, geo-tagged financial activity
-- `Login`: IPs, devices, and login history per customer
+- Local Microsoft SQL Server
+- A normalized schema (Customers, Transactions, Login)
+- External Python feature pipelines
 
 ---
 
@@ -90,44 +87,46 @@ Phase 2 simulates a production environment with:
 | TransactionratePerHour        | Hourly grouped transaction volume            |
 | TransactionBurstScore         | # of 5+ txns within a 10-min burst           |
 
-### 🧠 Behavioral Features (Planned)
+### 🧠 Behavioral Features
 
 | Feature               | Description                                 |
 |------------------------|---------------------------------------------|
-| RecentIPChange         | Login from unseen IP in last 5 logins       |
+| RecentIPChange         | Login from unseen IP address                |
 | RecentDeviceChange     | Login from new device                       |
-| DormancyPeriodLength   | # of days since last active use             |
-| GeoDriftScore          | Distance-based geo anomaly detection        |
+
+### 💤 Dormancy Features
+
+| Feature                 | Description                                                    |
+|-------------------------|----------------------------------------------------------------|
+| DaysSinceLastTransaction| Days between current and previous transaction                  |
+| GapBeforeHighTransaction| Long inactivity followed by a high-value transaction           |
+| IsDormantThenUsed       | Any transaction after a long period of inactivity              |
+| DormancyPeriodLength    | Longest inactivity gap recorded for the customer               |
 
 ---
 
 ## 🧪 How to Use Phase 2 (MSSQL Version)
 
-### 🔧 Step 1: Set up MSSQL Server
-- Install SQL Server Developer Edition
-- Create a database named `FraudDetection`
-- Use the provided schema in `generate_fraud_data.py` to create tables
+### 🔧 Step 1: Set up SQL Server
+- Install MSSQL Server (Developer Edition)
+- Run `generate_fraud_data.py` to populate the schema
 
 ### 🏗 Step 2: Generate Data
 ```bash
 python Feature-Engineering/generate_fraud_data.py
 ```
-Generates:
-- 100s of customers
-- 1000s of transactions
-- login patterns with IPs and devices
 
-### 🧮 Step 3: Extract Velocity Features
+### 🧮 Step 3: Extract Features
 ```bash
 python Feature-Engineering/velocity_features.py
+python Feature-Engineering/behavioral_features.py
+python Feature-Engineering/dormancy_features.py
 ```
-- Reads from SQL Server using `pyodbc`
-- Computes rolling metrics, burst scores, hourly rates
-- Exports enriched features to `velocity_features.csv`
 
-### 📊 Step 4 (Optional): Load to Power BI
-- Connect to `velocity_features.csv`
-- Build dashboards by customer, risk score, date, etc.
+Each script:
+- Reads data from SQL Server
+- Computes its respective features
+- Outputs `.csv` for inspection or downstream processing
 
 ---
 
@@ -140,40 +139,32 @@ python Feature-Engineering/velocity_features.py
 
 ---
 
-## 💡 Sample Output
-
-| CustomerID | TransactionDate     | TransactionCountUnder30Minutes | TransactionratePerHour | TransactionBurstScore |
-|------------|---------------------|--------------------------------|-------------------------|------------------------|
-| 1001       | 2025-05-10 14:12:00 | 4                              | 6                       | 2                      |
-
----
-
-## 🧠 Learning Highlights
-
-- Simulated real-world data pipelines
-- Local database hosting and connectivity via `pyodbc`
-- Rolling windows and burst detection using pandas
-- Data engineering best practices in modular file structure
-
----
-
 ## 📌 Future Roadmap
 
-- ✅ Add behavioral feature script (IP, device, dormancy)
-- ✅ Create merged master feature table
-- 🔄 Build Power BI dashboard for visual detection
-- 🔍 Add unsupervised anomaly detection (Isolation Forest)
-- 🧠 Enable model training using engineered features
+- ✅ Implement behavioral and dormancy features
+- 🔄 Join all features into a master transaction dataset
+- 📊 Build Power BI dashboard for fraud visualization
+- 🤖 Add machine learning for fraud scoring (Random Forest / Isolation Forest)
+- 📥 Optionally load enriched features back into SQL Server
+
+---
+
+## 💡 Sample Output (Dormancy)
+
+| CustomerID | TransactionDate | DaysSinceLastTransaction | GapBeforeHighTransaction | IsDormantThenUsed | DormancyPeriodLength |
+|------------|------------------|--------------------------|---------------------------|--------------------|-----------------------|
+| 1001       | 2025-05-01       | 0                        | 0                         | 0                  | 26                    |
+| 1001       | 2025-05-27       | 26                       | 1                         | 1                  | 26                    |
 
 ---
 
 ## 📦 Tech Stack
 
 - Python 3.10+
-- pandas, Faker
+- Pandas, Faker
 - pyodbc, sqlite3
-- MSSQL Server Developer Edition
-- Power BI (optional for visuals)
+- Microsoft SQL Server
+- Power BI (optional)
 
 ---
 
@@ -181,7 +172,7 @@ python Feature-Engineering/velocity_features.py
 
 **Musaib Nagani**  
 Computer Science | AI & Data Analytics | Fraud Detection Systems  
-Built with a focus on real-world applications and data engineering workflow simulation.
+Built to simulate end-to-end real-world fraud detection systems for enterprise-style pipelines.
 
 ---
 
