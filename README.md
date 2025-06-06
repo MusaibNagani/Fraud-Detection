@@ -32,21 +32,28 @@ fraud-detection/
 │   ├── velocity_features.py
 │   ├── behavioral_features.py
 │   ├── dormancy_features.py
-|   └── join_features.py
+│   └── join_features.py
 │
 ├── Rule-Based-Method/
 │   ├── generate_data.py
 │   ├── fraud_detection.py
 │   └── fraud_detection.db
 │
-├── output/                           
+├── output/
 │   ├── velocity_features.csv
 │   ├── behavioral_features.csv
 │   ├── dormancy_features.csv
-|   └── final-features.csv
+│   └── final_features.csv
+│
+├── dashboard/  
+│   ├── FraudDashboard.pbix          
+│   ├── README.md                    
+│   └── screenshots/                 
+│       ├── Page 1.png
+│       └── Page 2.png
 │
 ├── .venv/
-└── README.md
+└── README.md                       
 ```
 
 ---
@@ -143,12 +150,20 @@ Each script:
 
 ---
 
+## 📌 Visuals Included
+
+- Bar chart: Transactions per Customer
+- Risk Score Clustered Bar
+- Line chart: Transaction Rate Over Time
+- Scatter plot: Burst vs Dormancy
+- Pie chart: Risk Flags
+- Slicers: TransactionDate, CustomerID, Dormancy status
+
+---
+
 ## 📌 Future Roadmap
 
-- ✅ Implement behavioral and dormancy features
-- 🔄 Join all features into a master transaction dataset
-- 📊 Build Power BI dashboard for fraud visualization
-- 🤖 Add machine learning for fraud scoring (Random Forest / Isolation Forest)
+- 🤖 Add machine learning for fraud scoring 
 - 📥 Optionally load enriched features back into SQL Server
 
 ---
